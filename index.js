@@ -50,15 +50,10 @@ module.exports = function SbCancel(mod) {
         lancer = ((event.templateId - 10101) % 100) == 1;
     });
 
-    mod.hook('C_PLAYER_LOCATION', 5, {order: -999999}, (event) => {
-        if (lancer && enabled) { 
-            loc = event.dest;
-        }
-    });
-
     mod.hook('C_START_SKILL', 7, {order: -999999}, (event) => {
         if (event.skill.id == SB_1 && lancer && enabled) {
             w = event.w;
+			loc = event.loc;
             setTimeout(function(){
                 dispatchInjectedSBCancel()
             }, DELAY)
