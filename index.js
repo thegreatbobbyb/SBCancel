@@ -1,19 +1,20 @@
 const DELAY = 180; // SBCancel delay in ms
-
 // Stuff
 const SB_1 = 181100;
 const SB_2 = 181101;
 const BLOCK = 20200;
 
 module.exports = function SbCancel(mod) {
-    let lancer;
     let enabled = true;
     let w;
     let loc;
+	let hooks = [];
     
     mod.command.add('sbcancel', () => {
         enabled = !enabled;
-        mod.command.message(`SBCancel is now ${enabled ? 'en' : 'dis'}abled.`)
+        mod.command.message(`SBCancel is now ${enabled ? 'en' : 'dis'}abled.`);
+		if(mod.game.me.class === 'lancer' && enabled) load();
+		else unload();
     })
 
     function dispatchInjectedSBCancel() {
@@ -45,18 +46,32 @@ module.exports = function SbCancel(mod) {
             })
         }, 20)
     }
-    
-    mod.hook('S_LOGIN', 12, (event) => {
-        lancer = ((event.templateId - 10101) % 100) == 1;
+	
+	mod.game.on('enter_game', () => {
+        (mod.game.me.class === 'lancer' && enabled) ? load() : unload();
     });
-
-    mod.hook('C_START_SKILL', 7, {order: -999999}, (event) => {
-        if (event.skill.id == SB_1 && lancer && enabled) {
-            w = event.w;
-			loc = event.loc;
-            setTimeout(function(){
-                dispatchInjectedSBCancel()
-            }, DELAY)
-        }
-    })
+	
+	function hook(){ hooks.push(mod.hook(...arguments)); }
+	
+	function unload(){
+		if(hooks.length){
+			for (let h of hooks)
+				mod.unhook(h);
+			hooks = [];
+		}
+	}    
+    
+	function load(){
+		if(!hooks.length){
+			hook('C_START_SKILL', 7, {order: -999999}, (event) => {
+				if(event.skill.id == SB_1){
+					w = event.w;
+					loc = event.loc;
+					setTimeout(function(){
+						dispatchInjectedSBCancel()
+					}, DELAY)
+				}
+			})
+		}
+	}
 }
