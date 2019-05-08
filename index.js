@@ -9,12 +9,12 @@ module.exports = function SbCancel(mod) {
     let w;
     let loc;
 	let hooks = [];
+	let lancer = false;
     
     mod.command.add('sbcancel', () => {
         enabled = !enabled;
         mod.command.message(`SBCancel is now ${enabled ? 'en' : 'dis'}abled.`);
-		if(mod.game.me.class === 'lancer' && enabled) load();
-		else unload();
+		(lancer && enabled) ? load() : unload();
     })
 
     function dispatchInjectedSBCancel() {
@@ -47,8 +47,9 @@ module.exports = function SbCancel(mod) {
         }, 20)
     }
 	
-	mod.game.on('enter_game', () => {
-        (mod.game.me.class === 'lancer' && enabled) ? load() : unload();
+	mod.hook('S_LOGIN', 13, (event) => {
+		lancer = ((event.templateId - 10101) % 100) == 1;
+        (lancer && enabled) ? load() : unload();
     });
 	
 	function hook(){ hooks.push(mod.hook(...arguments)); }
