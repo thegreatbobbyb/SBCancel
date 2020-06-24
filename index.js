@@ -47,7 +47,7 @@ module.exports = function SbCancel(mod) {
         }, 20)
     }
 	
-	mod.hook('S_LOGIN', 13, (event) => {
+	mod.hook('S_LOGIN', 14, (event) => {
 		lancer = ((event.templateId - 10101) % 100) == 1;
         (lancer && enabled) ? load() : unload();
     });
