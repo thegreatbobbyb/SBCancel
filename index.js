@@ -8,8 +8,8 @@ module.exports = function SbCancel(mod) {
     let enabled = true;
     let w;
     let loc;
-	let hooks = [];
-	let lancer = false;
+    let hooks = [];
+    let lancer = false;
     
     mod.command.add('sbcancel', () => {
         enabled = !enabled;
