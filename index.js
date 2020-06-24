@@ -1,4 +1,4 @@
-const DELAY = 180; // SBCancel delay in ms
+const DELAY = 160; // SBCancel delay in ms
 // Stuff
 const SB_1 = 181100;
 const SB_2 = 181101;
@@ -11,7 +11,7 @@ module.exports = function SbCancel(mod) {
     let hooks = [];
     let lancer = false;
     
-    mod.command.add('sbcancel', () => {
+    mod.command.add('sb', () => {
         enabled = !enabled;
         mod.command.message(`SBCancel is now ${enabled ? 'en' : 'dis'}abled.`);
 		(lancer && enabled) ? load() : unload();
