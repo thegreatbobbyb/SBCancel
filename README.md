@@ -2,4 +2,4 @@
 Shield barrage cancel
 
 ### Commands:
-- **sbcancel**: Enables/Disables sbcancel
+- /8 sb : Enables/Disables sbcancel
